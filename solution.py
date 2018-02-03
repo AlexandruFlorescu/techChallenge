@@ -13,16 +13,6 @@ def read_data():
 		test_dataset = [doc.split() for doc in test_dataset]
 	return train_dataset, test_dataset
 
-# def raw_count(docs):
-# 	counts = {}
-# 	for doc in docs:
-# 		for word in doc:
-# 			if word in counts:
-# 				counts[word] += 1
-# 			else:	
-# 				counts[word] = 1 
-# 	return counts
-
 def tf(term, doc):
 	count = 0
 	for word in doc:
