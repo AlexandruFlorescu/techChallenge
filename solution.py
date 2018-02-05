@@ -46,7 +46,8 @@ def idf(term, docs):
 def doc_to_vec(doc, idfs, vocab):
 	feats = np.zeros(len(vocab))
 	for word in doc:
-		feats[vocab.index(word)] = tf(word, doc) * idfs[word]
+		if word in vocab: # filter words that only appear in test_dataset
+			feats[vocab.index(word)] = tf(word, doc) * idfs[word]
 	return feats
 
 if __name__ == '__main__':
@@ -78,7 +79,7 @@ if __name__ == '__main__':
 	print 'Converting documents to numerical features...',
 	sys.stdout.flush()
 	train_vectorized = [doc_to_vec(doc, train_idfs, list(train_vocab)) for doc in train_dataset]
-	test_vectorized = [doc_to_vec(doc, train_idfs, list(test_vocab)) for doc in test_dataset]
+	test_vectorized = [doc_to_vec(doc, train_idfs, list(train_vocab)) for doc in test_dataset]
 	print 'Done'
 
 	print 'Clustering using KMeans algorithm...',
