@@ -1,5 +1,6 @@
 from __future__ import division # to run float division on TF 
 from math import log
+from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import preprocessing
@@ -42,51 +43,51 @@ def idf(term, docs):
 			nr_docs_with_term +=1 
 	return log(nr_docs/nr_docs_with_term)
 
-def doc_to_vec(doc, idfs, corpus):
-	feats = np.zeros(len(corpus))
+def doc_to_vec(doc, idfs, vocab):
+	feats = np.zeros(len(vocab))
 	for word in doc:
-		feats[corpus.index(word)] = tf(word, doc) * idfs[word]
+		feats[vocab.index(word)] = tf(word, doc) * idfs[word]
 	return feats
 
 if __name__ == '__main__':
 	train_dataset, train_labels, test_dataset, test_labels = read_data()
 	print 'Training dataset has: {} documents'.format(len(train_dataset))
 	print 'Testing dataset has: {} documents'.format(len(test_dataset))
-	print 'Building corpuses...',
+	print 'Building vocabularies...',
 	sys.stdout.flush()
-	train_corpus = set([])
-	test_corpus = set([])
+	train_vocab = set([])
+	test_vocab = set([])
 	for doc in train_dataset:
-		train_corpus = train_corpus.union(set(doc))
+		train_vocab = train_vocab.union(set(doc))
 	for doc in test_dataset:
-		test_corpus = test_corpus.union(set(doc))
+		test_vocab = test_vocab.union(set(doc))
 	print 'Done'
 
-	print 'Computing idfs on corpuses...',
+	print 'Computing idfs on vocabularies...',
 	sys.stdout.flush()
 	train_idfs = {}
 	test_idfs = {}
-	for word in train_corpus:
+	for word in train_vocab:
 		if word not in train_idfs:
 			train_idfs[word] = idf(word, train_dataset)
-	for word in test_corpus:
+	for word in test_vocab:
 		if word not in test_idfs:
 			test_idfs[word] = idf(word, test_dataset)
 	print 'Done'
 
 	print 'Converting documents to numerical features...',
 	sys.stdout.flush()
-	train_vectorized = [doc_to_vec(doc, train_idfs, list(train_corpus)) for doc in train_dataset]
-	test_vectorized = [doc_to_vec(doc, test_idfs, list(test_corpus)) for doc in test_dataset]
+	train_vectorized = [doc_to_vec(doc, train_idfs, list(train_vocab)) for doc in train_dataset]
+	test_vectorized = [doc_to_vec(doc, train_idfs, list(test_vocab)) for doc in test_dataset]
 	print 'Done'
 
 	print 'Clustering using KMeans algorithm...',
 	sys.stdout.flush()
 	kmeans = KMeans(n_clusters = 7,random_state = 0).fit(train_vectorized)
 	print 'Done'
-	print 'KMeans(7): Accuracy on the training subset: {:.3f}'.format(kmeans.score(train_vectorized, train_labels))
-	sys.stdout.flush()
-	print 'KMeans(7): Accuracy on the test subset: {:.3f}'.format(kmeans.fit(test_vectorized).score(test_vectorized, test_labels))
+	print 'KMeans(7): Accuracy on the training subset: {:.3f}'.format(metrics.adjusted_mutual_info_score(train_labels, kmeans.labels_))#kmeans.score(train_vectorized, train_labels))
+	# sys.stdout.flush()
+	# print 'KMeans(7): Accuracy on the test subset: {:.3f}'.format(metrics.adjusted_mutual_info_score(kmeans.fit(test_vectorized).score(test_vectorized, test_labels))
 
 	print 'Clustering using Decision Trees algorithm...',
 	sys.stdout.flush()
@@ -99,7 +100,7 @@ if __name__ == '__main__':
 
 
 	# np.set_printoptions(threshold=np.nan)
-	print kmeans.labels_, train_labels
-	print normalized_mutual_info_score(kmeans.labels_, train_labels)
+	# print kmeans.labels_, train_labels
+	# print normalized_mutual_info_score(kmeans.labels_, train_labels)
 
 	# print len(train_dataset[0]), len(doc_to_vec(train_dataset[0], idfs))
