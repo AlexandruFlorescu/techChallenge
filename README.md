@@ -16,7 +16,7 @@ The results are as follow:
 	* Accuracy on the training subset: 0.352
 
 
-The script is running all this algorithms sequencially and printing details on each step. To run it simply type: `python solution.py`
+The script is running all this algorithms sequencially and printing details on each step. To run it: `python solution.py`
 
 
 
