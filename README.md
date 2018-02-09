@@ -7,13 +7,13 @@ The program uses a TF*IDF approach to rate each word in the documents. It thus u
 # Results
 The results are as follow:
 1. Logistic Regression:
-	*Accuracy on the training subset: 0.995
-	*Accuracy on the test subset: 0.872
+	* Accuracy on the training subset: 0.995
+	* Accuracy on the test subset: 0.872
 2. Decision Trees:
-	*Accuracy on the training subset: 0.995
-	*Accuracy on the test subset: 0.753
+	* Accuracy on the training subset: 0.995
+	* Accuracy on the test subset: 0.753
 3. KMeans (4):
-	*Accuracy on the training subset: 0.352
+	* Accuracy on the training subset: 0.352
 
 
 The script is running all this algorithms sequencially. To run it simply type: python solution.py
