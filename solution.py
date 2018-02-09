@@ -156,6 +156,8 @@ if __name__ == '__main__':
 	kmeans = KMeans(n_clusters = 4,random_state = 0).fit(train_vectorized)
 	print 'Done'
 	# np.set_printoptions(threshold=np.nan) this allows to see all the values in the labels array
+	# print kmeans.labels_
+	# print train_labels
 	print 'KMeans(4): Accuracy on the training subset: {:.3f}'.format(metrics.adjusted_mutual_info_score(train_labels, kmeans.labels_))#kmeans.score(train_vectorized, train_labels))
 
 		
